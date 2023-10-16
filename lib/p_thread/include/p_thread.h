@@ -1,7 +1,7 @@
 #pragma once
 #include <zephyr.h>
 
-void thread_setup(int priority, struct k_sem semaphore, char* thread_name, struct k_timer *timer, k_timeout_t timeout, k_timeout_t sleeptime);
+void thread_entry_helper(int priority, struct k_sem semaphore, char* thread_name, struct k_timer *timer, k_timeout_t timeout, k_timeout_t sleeptime);
 
 void thread_counter(int* counter,
                     struct k_sem * semaphore,
