@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "p_thread.h": "c",
+        "condition_variable": "c"
+    }
+}
