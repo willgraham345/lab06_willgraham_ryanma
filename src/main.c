@@ -24,7 +24,7 @@ struct k_sem semaphore;
 
 int main(void)
 {
-    counter = 0;
+    int counter = 0;
     k_sem_init(&semaphore, 1,1); //Initializing the semaphore
 
 
