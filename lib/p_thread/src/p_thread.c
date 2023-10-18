@@ -1,12 +1,13 @@
 #include "p_thread.h"
 
 
-void thread_entry(){
+void thread_entry()
+{
     for (int i = 0; ; i++);
 }
 
-void thread_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * stack, size_t stack_size, int priority, k_timeout_t wait){
-
+void thread_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * stack, size_t stack_size, int priority, k_timeout_t wait)
+{
     k_thread_create(new_thread,
                     stack,
                     stack_size,
@@ -20,7 +21,8 @@ void thread_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * stac
 
 }
 
-void supervisor_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * stack, size_t stack_size){
+void supervisor_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * stack, size_t stack_size)
+{
         k_thread_create(new_thread,
                     stack,
                     stack_size,
@@ -35,6 +37,7 @@ void supervisor_create_wrapper(struct k_thread * new_thread, k_thread_stack_t * 
 
 
 
-void supervisor_entry(){
+void supervisor_entry()
+{
     for (int i = 0; ; i++);
 }
