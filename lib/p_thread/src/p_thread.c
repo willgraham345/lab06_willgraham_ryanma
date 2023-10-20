@@ -4,8 +4,12 @@
 #include <unity.h>
 #include "p_thread.h"
 
-
-
+#define STACKSIZE 2000
+extern k_thread_runtime_stats_t threads_runtime_stats;
+K_THREAD_STACK_DEFINE(hi_stack, STACKSIZE);
+K_THREAD_STACK_DEFINE(lo_stack, STACKSIZE);
+K_THREAD_STACK_DEFINE(super_stack, STACKSIZE);
+struct k_thread hi_thread, lo_thread, super_thread;
 
 void thread_create_wrapper(struct k_thread * new_thread,
     k_thread_stack_t * stack,
@@ -27,7 +31,8 @@ void thread_create_wrapper(struct k_thread * new_thread,
 
 }
 
-void supervisor_create_wrapper(struct k_thread * supervisor_thread, 
+void supervisor_create_wrapper(uint_32 test_duration,
+    struct k_thread * supervisor_thread, 
     k_thread_stack_t * supervisor_stack, 
     size_t stack_size, 
     k_thread_entry_t supervisor_entry, 
@@ -43,14 +48,14 @@ void supervisor_create_wrapper(struct k_thread * supervisor_thread,
                     NULL,
                     -CONFIG_NUM_COOP_PRIORITIES,
                     0,
-                    K_NO_WAIT);
+                    K_MSEC(test_duration));
 }
 
 
 
 void run_analyzer(k_thread_entry_t thread_entry,
                   void *arg,
-                  int pri_prio,  k_timeout_t pri_delay,
+                  int hi_prio,  k_timeout_t pri_delay,
                   uint64_t *pri_duration,
                   int sec_prio,  k_timeout_t sec_delay,
                   uint64_t *sec_duration,
@@ -84,10 +89,12 @@ void run_analyzer_split(uint32_t test_duration,
 {
 
 	uint64_t start, primary, secondary, end, elapsed;
-    k_thread_runtime_stats_t pri_stats, sec_stats, start_stats, end_stats;;
-
+    k_thread_runtime_stats_t pri_stats, sec_stats, start_stats, end_stats;
+    
+    
     k_thread_runtime_stats_all_get(&start_stats);
-    supervisor_create_wrapper(&super_thread, 
+    supervisor_create_wrapper(test_duration,
+                            &super_thread, 
                             super_stack,
                             STACKSIZE,
                             (k_thread_entry_t) super_entry,
