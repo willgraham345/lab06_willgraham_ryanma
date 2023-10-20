@@ -31,14 +31,14 @@ int main(void)
     k_sem_init(&semaphore, 1,1); //Initializing the semaphore
     // supervisor_create_thread(&coop_thread, coop_stack, STACKSIZE, )
 
-    int high_priority_int = 1;
-    int low_priority_int = 3;
+    // int high_priority_int = 1;
+    // int low_priority_int = 3;
 
-    supervisor_create_wrapper(&supervisor_thread, supervisor_stack, STACKSIZE);
-    // First thread, higher priority, wait 2 seconds to start
-    thread_create_wrapper(&high_priority_thread, high_priority_stack, STACKSIZE, high_priority_int, DELAY_START);
-    // Second thread, lower priority, start immediately, take semaphore
-    thread_create_wrapper(&low_priority_thread, high_priority_stack, STACKSIZE, low_priority_int, K_NO_WAIT);
+    // supervisor_create_wrapper(5000, &supervisor_thread, supervisor_stack, STACKSIZE, super_entry, &high_priority_thread, &low_priority_thread);
+    // // First thread, higher priority, wait 2 seconds to start
+    // thread_create_wrapper(&high_priority_thread, high_priority_stack, STACKSIZE, high_priority_int, DELAY_START);
+    // // Second thread, lower priority, start immediately, take semaphore
+    // thread_create_wrapper(&low_priority_thread, high_priority_stack, STACKSIZE, low_priority_int, K_NO_WAIT);
 
 	return 0;
 }
