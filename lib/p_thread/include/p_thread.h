@@ -44,4 +44,3 @@ void supervisor_create_wrapper(uint32_t test_duration,
     k_thread_entry_t supervisor_entry,
     struct k_thread * hi_prio_thread,
     struct k_thread * lo_prio_thread);
-void supervisor_entry();

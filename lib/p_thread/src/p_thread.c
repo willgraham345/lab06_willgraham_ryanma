@@ -2,7 +2,7 @@
 #include <zephyr.h>
 #include <arch/cpu.h>
 #include "p_thread.h"
-// #include <unity.h>
+#include <unity.h>
 
 #define STACKSIZE 2000
 extern k_thread_runtime_stats_t threads_runtime_stats;
@@ -15,11 +15,11 @@ struct k_thread hi_thread, lo_thread, super_thread;
 char * hi_name = "hi";
 char * lo_name = "lo";
 
-void super_entry(struct k_thread *primary, struct k_thread *secondary)
+void super_entry(struct k_thread *hi, struct k_thread *lo)
 {
     printk("super is suspending threads\n");
-    k_thread_suspend(primary);
-    k_thread_suspend(secondary);
+    k_thread_suspend(hi);
+    k_thread_suspend(lo);
 }
 
 void thread_create_wrapper(struct k_thread * new_thread,
@@ -67,9 +67,11 @@ void supervisor_create_wrapper(uint32_t test_duration,
 
 void run_analyzer(k_thread_entry_t thread_entry,
                   void *arg,
-                  int hi_prio,  k_timeout_t hi_delay,
+                  int hi_prio, 
+                  k_timeout_t hi_delay,
                   uint64_t *pri_duration,
-                  int lo_prio,  k_timeout_t lo_delay,
+                  int lo_prio, 
+                  k_timeout_t lo_delay,
                   uint64_t *sec_duration,
                   uint64_t *total_duration)
 {
@@ -100,8 +102,8 @@ void run_analyzer_split(uint32_t test_duration,
                         uint64_t *total_duration)
 {
 
-	uint64_t start, primary, secondary, end, elapsed;
-    k_thread_runtime_stats_t pri_stats, sec_stats, start_stats, end_stats;
+	uint64_t start, hi, lo, end, elapsed;
+    k_thread_runtime_stats_t hi_stats, lo_stats, start_stats, end_stats;
     
     k_thread_runtime_stats_all_get(&start_stats);
     
@@ -131,30 +133,25 @@ void run_analyzer_split(uint32_t test_duration,
     k_thread_join(&super_thread, K_MSEC(5500));
     printk("super joined\n");
 
+
+    k_thread_runtime_stats_get(&hi_thread, &hi_stats);
+    k_thread_runtime_stats_get(&lo_thread, &lo_stats);
+    k_thread_runtime_stats_all_get(&end_stats);
+
+
     start = timing_cycles_to_ns(start_stats.execution_cycles) / 1000;
-    primary = timing_cycles_to_ns(pri_stats.execution_cycles) / 1000;
-    secondary = timing_cycles_to_ns(sec_stats.execution_cycles) / 1000;
+    hi = timing_cycles_to_ns(hi_stats.execution_cycles) / 1000;
+    lo = timing_cycles_to_ns(lo_stats.execution_cycles) / 1000;
     end = timing_cycles_to_ns(end_stats.execution_cycles) / 1000;
     elapsed = end - start;
 
-    printk("primary %lld secondary %lld start %lld end %lld elapsed %lld (us)\n",
-           primary, secondary, start, end, elapsed);
+    printk("hi %lld lo %lld start %lld end %lld elapsed %lld (us)\n",
+           hi, lo, start, end, elapsed);
 
-    *hi_duration = primary;
-    *lo_duration = secondary;
+    *hi_duration = hi;
+    *lo_duration = lo;
     *total_duration = elapsed;
 
     k_thread_abort(&hi_thread);
     k_thread_abort(&lo_thread);
-
-    //TODO: Add two preemtive thread calls
-    //TODO: Add joining threads
-    //TODO: Add runtime states
-    //TODO: Add printing everything (use printk)
-
-    //TODO: Add aborting threads.
-
-    // thread_create_wrapper(&primary_)
-
-
 }

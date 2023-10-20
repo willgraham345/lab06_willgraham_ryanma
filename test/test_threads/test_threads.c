@@ -2,7 +2,7 @@
 #include <zephyr.h>
 #include <arch/cpu.h>
 #include <unity.h>
-#include "helper.c"
+#include "p_thread.c"
 
 void setUp(void) {}
 
@@ -60,7 +60,7 @@ void test_priority_inversion(void)
 
 int main (void)
 {
-
     UNITY_BEGIN();
     RUN_TEST(test_priority_inversion);
+    return UNITY_END();
 }
