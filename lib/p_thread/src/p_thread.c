@@ -72,7 +72,7 @@ void run_analyzer(k_thread_entry_t thread_entry,
                   uint64_t *pri_duration,
                   int lo_prio, 
                   k_timeout_t lo_delay,
-                  uint64_t *sec_duration,
+                  uint64_t *lo_duration,
                   uint64_t *total_duration)
 {
     run_analyzer_split(5000,
@@ -81,7 +81,7 @@ void run_analyzer(k_thread_entry_t thread_entry,
                        hi_prio, hi_delay, pri_duration,
                        thread_entry,
                        lo_name, arg, NULL,
-                       lo_prio, lo_delay, sec_duration,
+                       lo_prio, lo_delay, lo_duration,
                        total_duration);
 
 }
@@ -94,7 +94,7 @@ void run_analyzer_two_entry(k_thread_entry_t thread_entry_hi,
                   uint64_t *pri_duration,
                   int lo_prio, 
                   k_timeout_t lo_delay,
-                  uint64_t *sec_duration,
+                  uint64_t *lo_duration,
                   uint64_t *total_duration)
 {
     run_analyzer_split(5000,
@@ -103,9 +103,36 @@ void run_analyzer_two_entry(k_thread_entry_t thread_entry_hi,
                        hi_prio, hi_delay, pri_duration,
                        thread_entry_lo,
                        lo_name, arg, NULL,
-                       lo_prio, lo_delay, sec_duration,
+                       lo_prio, lo_delay, lo_duration,
                        total_duration);
 }
+
+
+
+void run_analyzer_two_entry_with_args(k_thread_entry_t thread_entry_hi,
+                  k_thread_entry_t thread_entry_lo,
+                  void *hi_arg0, void * hi_arg1, void * hi_arg2,
+                  int hi_prio, 
+                  k_timeout_t hi_delay,
+                  uint64_t *pri_duration,
+
+                  void *lo_arg0, void * lo_arg1, void * lo_arg2, 
+                  int lo_prio, 
+                  k_timeout_t lo_delay,
+                  uint64_t *lo_duration,
+                  uint64_t *total_duration)
+{
+    run_analyzer_split(5000,
+                    thread_entry_hi,
+                    hi_arg0, hi_arg1, hi_arg2,
+                    hi_prio, hi_delay, pri_duration,
+                    thread_entry_lo,
+                    lo_arg0, lo_arg1, lo_arg2,
+                    lo_prio, lo_delay, lo_duration,
+                    total_duration);
+}
+
+
 
 void run_analyzer_split(uint32_t test_duration,
                         k_thread_entry_t hi_thread_entry,
@@ -146,7 +173,8 @@ void run_analyzer_split(uint32_t test_duration,
         lo_prio,
         lo_delay);
     printk("Lo thread created\n");
-
+    
+    printk("Starting to join super thread");
     k_thread_join(&super_thread, K_MSEC(5500));
     printk("super joined\n");
 

@@ -211,7 +211,11 @@ void test_preempt__busy_and_yield(void)
 int main (void)
 {
     UNITY_BEGIN();
+    printk("///////////////////////\n");
+    printk("Starting activity 0 tests\n");
     RUN_TEST(test_priority_inversion);
+    printk("///////////////////////\n");
+    printk("Starting activity 1 tests\n");
     RUN_TEST(test_same_priority);
     RUN_TEST(test_coop__no_priority__no_yield);
     RUN_TEST(test_preempt__no_priority__no_yield);
@@ -224,6 +228,11 @@ int main (void)
     RUN_TEST(test_preempt__priority__no_yield);
     RUN_TEST(test_preempt__priority__yield);
     RUN_TEST(test_mix__priority__yield);
+
+
+    printk("///////////////////////\n");
+    printk("Starting activity 2 tests\n");
+    RUN_TEST(test_preempt__busy_and_yield);
     
     return UNITY_END();
 }
