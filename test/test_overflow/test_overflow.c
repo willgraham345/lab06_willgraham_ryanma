@@ -6,36 +6,50 @@
 
 
 
-K_MSGQ_DEFINE(my_msgq, sizeof(char), 1000, 4);
 
 void setUp(void) {}
 
 void tearDown(void) {}
 
-
-void producer_thread_entry(struct k_msgq *my_msgq, uint64_t *lost_ctr, uint64_t *produce_ctr)
+void producer_thread_entry(struct k_msgq *queue, uint64_t *out_count, uint64_t *lost_count)
+// void producer_thread_entry(struct k_msgq *my_msgq, uint64_t *lost_ctr, uint64_t *produce_ctr)
 {
-    // Send a continuous message across my_msgq
-    char msg = 'A';
-    while (1) {
-        if (k_msgq_put(my_msgq, &msg, K_NO_WAIT)) {
-            (*lost_ctr)++;
+//     // Send a continuous message across my_msgq
+//     printk("Starting the producer thread entry\n");
+//     char msg = 'A';
+//     while (1) {
+//         (*produce_ctr)++;
+//         if (k_msgq_put(my_msgq, &msg, K_NO_WAIT)) {
+//             (*lost_ctr)++;
+//         }
+//     }
+// }
+    printk("Starting produce\n");
+    while(1) {
+        // Send the 95 printable ASCII characters
+        for (char c = ' '; c < 0x7f; c++) {
+            uint32_t u = (uint32_t)c;
+            (*out_count)++;
+            if (k_msgq_put(queue, &u, K_NO_WAIT)) {
+                (*lost_count)++;
+            }
         }
-        (*produce_ctr)++;
     }
 }
 
 void consumer_thread_entry(struct k_msgq *my_msgq, uint64_t *consume_ctr)
 {
     // Receive a continuous message across my_msgq
-    char msg;
+    printk("Starting the consumer thread entry\n");
+    uint32_t msg;
     while (1) {
         k_msgq_get(my_msgq, &msg, K_FOREVER);
-        (*consume_ctr)++;
         k_busy_wait(1000);
+        (*consume_ctr)++;
     }
 }
 
+K_MSGQ_DEFINE(my_msgq, sizeof(uint32_t), 1000, 4);
 
 
 
