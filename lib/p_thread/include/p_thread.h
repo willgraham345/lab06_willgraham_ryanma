@@ -22,8 +22,22 @@ void run_analyzer_split(uint32_t test_duration,
                         void *sec_arg0, void *sec_arg1, void *sec_arg2,
                         int lo_prio,  k_timeout_t lo_delay,
                         uint64_t *sec_duration,
-
                         uint64_t *total_duration);
+
+
+void run_analyzer_two_entry(k_thread_entry_t thread_entry_hi,
+                  k_thread_entry_t thread_entry_lo,
+                  void *arg,
+                  int hi_prio, 
+                  k_timeout_t hi_delay,
+                  uint64_t *pri_duration,
+                  int lo_prio, 
+                  k_timeout_t lo_delay,
+                  uint64_t *sec_duration,
+                  uint64_t *total_duration);
+
+
+
 
 void main_thread();
 

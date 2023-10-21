@@ -13,50 +13,50 @@ You may find it useful to create a helper function to setup and teardown the thr
 
 ### [Activity 1](https://github.com/uofu-emb/rtos/tree/main/labs/6.scheduling#activity-1)
 
-In this activity, you'll create two competing threads that use the following functions
+~~In this activity, you'll create two competing threads that use the following functions~~
+~~~~
+~~```~~
+~~void busy_busy(char *name)~~
+~~{~~
+    ~~for (int i = 0; ; i++);~~
+~~}~~
+~~~~
+~~void busy_yield(char *name)~~
+~~{~~
+    ~~for (int i = 0; ; i++) {~~
+        ~~if (!(i & 0xFF)) {~~
+            ~~k_yield();~~
+        ~~}~~
+    ~~}~~
+~~}~~
+~~```~~
 
-```
-void busy_busy(char *name)
-{
-    for (int i = 0; ; i++);
-}
+~~Write tests for two threads running the following scenarios. Try to predict the runtime for each thread.~~
 
-void busy_yield(char *name)
-{
-    for (int i = 0; ; i++) {
-        if (!(i & 0xFF)) {
-            k_yield();
-        }
-    }
-}
-```
-
-Write tests for two threads running the following scenarios. Try to predict the runtime for each thread.
-
-1. Threads with same priority:
-    1. Coop
-        1. Both run `busy_busy`.
-        2. Both run `busy_yield`
-    2. Preempt
-        1. Both run `busy_busy`.
-        2. Both run `busy_yield`
-2. Threads with different priority.
-    1. Coop
-        1. Both run `busy_busy`.
-            1. Higher priority starts first.
-            2. Lower priority starts first.
-        2. Both run `busy_yield`
-            1. Higher priority starts first.
-            2. Lower priority starts first.
-    2. Preempt
-        1. Both run `busy_busy`.
-            1. Higher priority starts first.
-            2. Lower priority starts first.
-        2. Both run `busy_yield`
-            1. Higher priority starts first.
-            2. Lower priority starts first.
-
-Make sure you are setting priorities according to the priority order presented in the documentation.
+~~1. Threads with same priority:~~
+    ~~1. Coop~~
+        ~~1. Both run `busy_busy`.~~
+        ~~2. Both run `busy_yield`~~
+    ~~2. Preempt~~
+        ~~1. Both run `busy_busy`.~~
+        ~~2. Both run `busy_yield`~~
+~~2. Threads with different priority.~~
+    ~~1. Coop~~
+        ~~1. Both run `busy_busy`.~~
+            ~~1. Higher priority starts first.~~
+            ~~2. Lower priority starts first.~~
+        ~~2. Both run `busy_yield`~~
+            ~~1. Higher priority starts first.~~
+            ~~2. Lower priority starts first.~~
+    ~~2. Preempt~~
+        ~~1. Both run `busy_busy`.~~
+            ~~1. Higher priority starts first.~~
+            ~~2. Lower priority starts first.~~
+        ~~2. Both run `busy_yield`~~
+            ~~1. Higher priority starts first.~~
+            ~~2. Lower priority starts first.~~
+~~~~
+~~Make sure you are setting priorities according to the priority order presented in the documentation.~~
 
 ### [Activity 2](https://github.com/uofu-emb/rtos/tree/main/labs/6.scheduling#activity-2)
 

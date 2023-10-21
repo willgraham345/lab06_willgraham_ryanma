@@ -26,7 +26,7 @@ void busy_sleep(char *name)
 {
     printk("start busy_busy %s\n", name);
     k_busy_wait(10000);
-    k_sleep(K_MSEC(490));
+    k_sleep(K_MSEC(490)); //Doesn't release semaphore
 }
 
 
@@ -40,7 +40,7 @@ void priority_inversion(char *name, struct k_sem *sem)
     for (int i = 0; ; i++);
 }
 
-// Activity 1
+// Activity 0
 void test_priority_inversion(void)
 {
     uint64_t high_stats, low_stats, elapsed_stats;
@@ -55,7 +55,7 @@ void test_priority_inversion(void)
     TEST_ASSERT_UINT64_WITHIN(100000, 5000000, low_stats);
 }
 
-
+// Activity 1
 void test_same_priority(void)
 {
     uint64_t high_stats, low_stats, elapsed_stats;
@@ -182,6 +182,7 @@ void test_preempt__priority__yield(void)
 
 void test_mix__priority__yield(void)
 {
+
     uint64_t low_stats, high_stats, elapsed_stats;
     run_analyzer((k_thread_entry_t)busy_yield,  NULL,
                  K_PRIO_PREEMPT(3), K_MSEC(10), &low_stats,
@@ -193,6 +194,20 @@ void test_mix__priority__yield(void)
 
 
 
+// Activity 2
+
+void test_preempt__busy_and_yield(void)
+{
+    uint64_t low_stats, high_stats, elapsed_stats;
+    // Names kept same as high and low for convenience
+    // hi = busy_sleep, lo = busy_yield
+    run_analyzer_two_entry((k_thread_entry_t)busy_sleep, (k_thread_entry_t)busy_yield, NULL,
+                 K_PRIO_PREEMPT(3), K_MSEC(10), &low_stats,
+                 K_PRIO_PREEMPT(2), K_MSEC(10), &high_stats,
+                 &elapsed_stats);
+    TEST_ASSERT_UINT64_WITHIN(5000, 0, low_stats);
+    TEST_ASSERT_UINT64_WITHIN(100000, 5000000, high_stats);
+}
 int main (void)
 {
     UNITY_BEGIN();
