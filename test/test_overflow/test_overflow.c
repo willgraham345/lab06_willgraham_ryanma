@@ -60,12 +60,19 @@ void test_msgq_overflow(void)
     k_msgq_purge(&my_msgq);
     uint64_t consume_stats, produce_stats, elapsed_stats;
     uint64_t produce_ctr, lost_ctr, consume_ctr;
+
     produce_ctr = lost_ctr = consume_ctr = 0;
-    run_analyzer_two_entry_with_args(100,
-                       (k_thread_entry_t)producer_thread_entry, &my_msgq, &lost_ctr, &produce_ctr,
-                       K_PRIO_PREEMPT(4), K_MSEC(10), &produce_stats,
-                       (k_thread_entry_t)consumer_thread_entry, &my_msgq, &consume_ctr,
-                       K_PRIO_PREEMPT(3), K_MSEC(12), &consume_stats,
+    run_analyzer_two_entry_with_args(
+                       (k_thread_entry_t)producer_thread_entry, //hi thread entry
+                       (k_thread_entry_t)consumer_thread_entry, //lo thread entry
+                       &my_msgq, &lost_ctr, &produce_ctr, //args for hi
+                       K_PRIO_PREEMPT(4), //hi prio
+                       K_MSEC(10), //hi delay
+                       &consume_stats, // pri_duration
+                       &my_msgq, &consume_ctr, NULL, //Args for lo
+                       K_PRIO_PREEMPT(3), //lo prio
+                       K_MSEC(12), //lo delay 
+                       &produce_stats, //lo_duration
                        &elapsed_stats);
     printk("produce_stats: %lld\n", produce_stats);
     printk("consume_stats: %lld\n", consume_stats);

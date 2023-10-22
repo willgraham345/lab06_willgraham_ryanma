@@ -202,8 +202,8 @@ void test_preempt__busy_and_yield(void)
     // Names kept same as high and low for convenience
     // hi = busy_sleep, lo = busy_yield
     run_analyzer_two_entry((k_thread_entry_t)busy_sleep, (k_thread_entry_t)busy_yield, NULL,
-                 K_PRIO_PREEMPT(3), K_MSEC(10), &low_stats,
-                 K_PRIO_PREEMPT(2), K_MSEC(10), &high_stats,
+                 K_PRIO_PREEMPT(3), K_MSEC(10), &high_stats,
+                 K_PRIO_PREEMPT(2), K_MSEC(10), &low_stats,
                  &elapsed_stats);
     TEST_ASSERT_UINT64_WITHIN(5000, 0, low_stats);
     TEST_ASSERT_UINT64_WITHIN(100000, 5000000, high_stats);
