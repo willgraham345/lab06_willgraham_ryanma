@@ -68,22 +68,5 @@ void busy_sleep(char *name)
 }
 ```
 
-1. Write tests for two threads: one should run `busy_sleep` and the other `busy_yield`
-2. Predict the share of the runtime for each of the threads.
-
-### [Activity 3](https://github.com/uofu-emb/rtos/tree/main/labs/6.scheduling#activity-3)
-
-Message queues and other communication channels can become saturated with data if the
-
-1. Create a message queue
-2. Create a producer thread and a consumer thread.
-3. The producer should produce data faster than the consumer consumes.
-    1. Add a busy wait to the consumer to emulate a long computation.
-    2. The producer should produce data to the queue. If the queue is full, lose the data.
-4. Track the production and consumption rates, the throughput and any data loss.
-
-You'll need to pay attention to the reshedule points in your threads and their priority.
-
-### [Activity 4](https://github.com/uofu-emb/rtos/tree/main/labs/6.scheduling#activity-4)
-
-1. Create a variant on the producer consumer from activity 3, but make it lossless.
+~~1. Write tests for two threads: one should run `busy_sleep` and the other `busy_yield`~~
+~~2. Predict the share of the runtime for each of the threads.~~
