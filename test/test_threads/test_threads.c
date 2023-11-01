@@ -48,8 +48,8 @@ void test_priority_inversion(void)
     k_sem_init(&sem, 1, 1);
 
     run_analyzer((k_thread_entry_t)priority_inversion, &sem,
-                 K_PRIO_PREEMPT(4), K_MSEC(10), &low_stats,
-                 K_PRIO_PREEMPT(3), K_MSEC(12), &high_stats,
+                 K_PRIO_PREEMPT(3), K_MSEC(10), &high_stats,
+                 K_PRIO_PREEMPT(2), K_MSEC(10), &low_stats,
                  &elapsed_stats);
     TEST_ASSERT_UINT64_WITHIN(1000, 0, high_stats);
     TEST_ASSERT_UINT64_WITHIN(100000, 5000000, low_stats);
